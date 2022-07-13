@@ -1,24 +1,51 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import './image-form.css';
 
-const ImageForm = () => {
-    const [imageWidth, setImageWidth] = useState(256);
-    const changeImageWidth = (event: ChangeEvent<HTMLInputElement>) => {
+interface ImageFormProps {
+    numPixels: number;
+}
+
+const ImageForm = ({numPixels}: ImageFormProps) => {
+    const [imageWidth, setImageWidth] = useState(0);
+
+    const changeImageWidth = (newWidth: number) => {
+        if (!isNaN(newWidth)) {
+            setImageWidth(newWidth);
+            const height = Math.ceil(numPixels / newWidth);
+            setImageHeight(height);
+        }
+    }
+
+    const changeImageHeight = (newHeight: number) => {
+        if (!isNaN(newHeight)) {
+            setImageWidth(newHeight);
+            const height = Math.ceil(numPixels / newHeight);
+            setImageHeight(height);
+        }
+    }
+
+    const handleWidthChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.trim() == '') setImageWidth(0);
         const parsedInt = parseInt(event.target.value);
-        if (!isNaN(parsedInt)) {
-            setImageWidth(parsedInt);
-        }
+        changeImageWidth(parsedInt);
     };
 
-    const [imageHeight, setImageHeight] = useState(256);
-    const changeImageHeight = (event: ChangeEvent<HTMLInputElement>) => {
+    const [imageHeight, setImageHeight] = useState(0);
+    const handleHeightChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.trim() == '') setImageHeight(0);
         const parsedInt = parseInt(event.target.value);
-        if (!isNaN(parsedInt)) {
-            setImageHeight(parsedInt);
-        }
+        changeImageHeight(parsedInt);
     };
+
+    useEffect(() => {
+        const root = Math.sqrt(numPixels);
+        if (Math.ceil(root) != root) {
+            changeImageWidth(Math.ceil(root));
+        } else {
+            setImageWidth(root);
+            setImageHeight(root);
+        }
+    }, [numPixels]);
 
     return (
         <div className='image-form'>
@@ -28,7 +55,7 @@ const ImageForm = () => {
                 className='image-form-width-field'
                 type="text"
                 value={imageWidth}
-                onChange={changeImageWidth} />
+                onChange={handleWidthChange} />
 
             <label>Height</label>
             <input
@@ -36,7 +63,7 @@ const ImageForm = () => {
                 className='image-form-height-field'
                 type="text"
                 value={imageHeight}
-                onChange={changeImageHeight} />
+                onChange={handleHeightChange} />
 
             <button
                 className='image-form-button'

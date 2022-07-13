@@ -26,7 +26,7 @@ function AppShell() {
 
     return (
         <main className='app-shell'>
-            <ImageForm numPixels={numColours} onDimensionSet={handleDimensionsSet}/>
+            <ImageForm numPixels={numColours} defaultWidth={defaultWidth} onDimensionSet={handleDimensionsSet}/>
             <ImageCanvas height={height} width={width} imageData={imageData}/>
         </main>
     );

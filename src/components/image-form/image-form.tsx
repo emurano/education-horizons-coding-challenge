@@ -8,6 +8,8 @@ interface ImageFormProps {
      */
     numPixels: number;
 
+    defaultWidth: number;
+
     /**
      * Callback to be called when the user clicks the set button
      *
@@ -25,7 +27,7 @@ interface ImageFormProps {
  *
  * @param numPixels
  */
-const useDimensions = (numPixels: number, onDimensionSet: (height: number, width: number) => void) => {
+const useDimensions = (numPixels: number, defaultWidth: number, onDimensionSet: (height: number, width: number) => void) => {
     const [imageHeight, setImageHeight] = useState(0);
     const [imageWidth, setImageWidth] = useState(0);
 
@@ -52,14 +54,11 @@ const useDimensions = (numPixels: number, onDimensionSet: (height: number, width
     };
 
     useEffect(() => {
-        const root = Math.sqrt(numPixels);
-        if (Math.ceil(root) !== root) {
-            changeImageWidth(Math.ceil(root));
-        } else {
-            setImageWidth(root);
-            setImageHeight(root);
-        }
-    }, [numPixels, changeImageWidth, onDimensionSet]);
+
+        const height = Math.ceil(numPixels / defaultWidth);
+        setImageWidth(defaultWidth);
+        setImageHeight(height);
+    }, [numPixels, defaultWidth]);
 
     return {
         imageHeight,
@@ -69,13 +68,13 @@ const useDimensions = (numPixels: number, onDimensionSet: (height: number, width
     };
 };
 
-const ImageForm = ({numPixels, onDimensionSet}: ImageFormProps) => {
+const ImageForm = ({numPixels, defaultWidth, onDimensionSet}: ImageFormProps) => {
     const {
         imageHeight,
         imageWidth,
         handleWidthChange,
         handleHeightChange
-    } = useDimensions(numPixels, onDimensionSet);
+    } = useDimensions(numPixels, defaultWidth, onDimensionSet);
 
     const handleSetClick = () => {
         if (onDimensionSet) onDimensionSet(imageHeight, imageWidth);

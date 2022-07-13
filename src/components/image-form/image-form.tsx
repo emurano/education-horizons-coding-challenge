@@ -5,36 +5,38 @@ interface ImageFormProps {
     numPixels: number;
 }
 
-const ImageForm = ({numPixels}: ImageFormProps) => {
+/**
+ * Handles the width and height values
+ *
+ * The width and height values are kept such that the resulting image will
+ * contain at least numPixels number of pixels
+ *
+ * @param numPixels
+ */
+const useDimensions = (numPixels: number) => {
     const [imageWidth, setImageWidth] = useState(0);
 
     const changeImageWidth = (newWidth: number) => {
-        if (!isNaN(newWidth)) {
-            setImageWidth(newWidth);
-            const height = Math.ceil(numPixels / newWidth);
-            setImageHeight(height);
-        }
+        if (isNaN(newWidth)) return;
+        setImageWidth(newWidth);
+        setImageHeight(Math.ceil(numPixels / newWidth));
     }
 
     const changeImageHeight = (newHeight: number) => {
-        if (!isNaN(newHeight)) {
-            setImageWidth(newHeight);
-            const height = Math.ceil(numPixels / newHeight);
-            setImageHeight(height);
-        }
+        if (isNaN(newHeight)) return;
+        setImageHeight(newHeight);
+        setImageWidth(Math.ceil(numPixels / newHeight));
     }
 
     const handleWidthChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.trim() == '') setImageWidth(0);
-        const parsedInt = parseInt(event.target.value);
-        changeImageWidth(parsedInt);
+        changeImageWidth(parseInt(event.target.value));
     };
 
     const [imageHeight, setImageHeight] = useState(0);
     const handleHeightChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.trim() == '') setImageHeight(0);
-        const parsedInt = parseInt(event.target.value);
-        changeImageHeight(parsedInt);
+        changeImageHeight(parseInt(event.target.value));
     };
 
     useEffect(() => {
@@ -46,6 +48,23 @@ const ImageForm = ({numPixels}: ImageFormProps) => {
             setImageHeight(root);
         }
     }, [numPixels]);
+
+    return {
+        imageWidth,
+        imageHeight,
+        handleWidthChange,
+        handleHeightChange
+    };
+};
+
+const ImageForm = ({numPixels}: ImageFormProps) => {
+
+    const {
+        imageWidth,
+        imageHeight,
+        handleWidthChange,
+        handleHeightChange
+    } = useDimensions(numPixels);
 
     return (
         <div className='image-form'>

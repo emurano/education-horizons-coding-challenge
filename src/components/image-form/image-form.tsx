@@ -1,5 +1,6 @@
-import React, {ChangeEvent, MouseEvent, useCallback, useEffect, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
 import './image-form.css';
+import {calculateHeightFromWidth, calculateWidthFromHeight} from "../../functions/dimensions";
 
 interface ImageFormProps {
     /**
@@ -13,7 +14,7 @@ interface ImageFormProps {
      * @param height The height the user entered into the form
      * @param width The width the user entered into the form
      */
-    onDimensionSet?: (height: number, width: number) => void;
+    onDimensionSet: (height: number, width: number) => void;
 }
 
 /**
@@ -24,41 +25,41 @@ interface ImageFormProps {
  *
  * @param numPixels
  */
-const useDimensions = (numPixels: number) => {
+const useDimensions = (numPixels: number, onDimensionSet: (height: number, width: number) => void) => {
     const [imageHeight, setImageHeight] = useState(0);
     const [imageWidth, setImageWidth] = useState(0);
 
-    const changeImageWidth = (newWidth: number) => {
+    const changeImageWidth = useCallback((newWidth: number) => {
         if (isNaN(newWidth)) return;
         setImageWidth(newWidth);
-        setImageHeight(Math.ceil(numPixels / newWidth));
-    }
+        setImageHeight(calculateHeightFromWidth(newWidth, numPixels));
+    }, [numPixels]);
 
     const changeImageHeight = (newHeight: number) => {
         if (isNaN(newHeight)) return;
         setImageHeight(newHeight);
-        setImageWidth(Math.ceil(numPixels / newHeight));
+        setImageWidth(calculateWidthFromHeight(newHeight, numPixels));
     }
 
     const handleWidthChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value.trim() == '') setImageWidth(0);
+        if (event.target.value.trim() === '') setImageWidth(0);
         changeImageWidth(parseInt(event.target.value));
     };
 
     const handleHeightChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value.trim() == '') setImageHeight(0);
+        if (event.target.value.trim() === '') setImageHeight(0);
         changeImageHeight(parseInt(event.target.value));
     };
 
     useEffect(() => {
         const root = Math.sqrt(numPixels);
-        if (Math.ceil(root) != root) {
+        if (Math.ceil(root) !== root) {
             changeImageWidth(Math.ceil(root));
         } else {
             setImageWidth(root);
             setImageHeight(root);
         }
-    }, [numPixels]);
+    }, [numPixels, changeImageWidth, onDimensionSet]);
 
     return {
         imageHeight,
@@ -74,7 +75,7 @@ const ImageForm = ({numPixels, onDimensionSet}: ImageFormProps) => {
         imageWidth,
         handleWidthChange,
         handleHeightChange
-    } = useDimensions(numPixels);
+    } = useDimensions(numPixels, onDimensionSet);
 
     const handleSetClick = () => {
         if (onDimensionSet) onDimensionSet(imageHeight, imageWidth);

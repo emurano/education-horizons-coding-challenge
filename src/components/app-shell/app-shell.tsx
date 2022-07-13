@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import './app-shell.css';
 import ImageForm from "../image-form";
 import ImageCanvas from "../image-canvas/image-canvas";
-import {Colour} from "../../functions/image-generation";
 import {calculateHeightFromWidth} from "../../functions/dimensions";
+import {generateImage} from "../../functions/image-generation/generate-image";
 
 const numColours = 32768;
 const defaultWidth = 256;
@@ -18,11 +18,7 @@ function AppShell() {
         setWidth(newWidth);
     };
 
-    const imageData: Colour[] = [];
-    for (let i = 0; i < numColours; i++) {
-        const hex = i.toString(16).padStart(6, "0");
-        imageData.push(`#${hex}`);
-    }
+    const imageData = generateImage(height, width);
 
     return (
         <main className='app-shell'>

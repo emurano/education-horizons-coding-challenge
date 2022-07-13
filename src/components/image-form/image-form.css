@@ -1,0 +1,26 @@
+.image-form {
+    display: grid;
+    /*gap: 0.5em;*/
+    column-gap: 0.5em;
+    row-gap: 0.25em;
+    grid-template-columns: 75px 75px 40px;
+    grid-template-rows: auto auto;
+    grid-auto-flow: column;
+    justify-content: center;
+}
+
+.image-form label {
+    text-align: center;
+    font-weight: bold;
+}
+
+.image-form-height-field,
+.image-form-width-field {
+    text-align: right;
+}
+
+.image-form-button {
+    grid-row: 2;
+    cursor: pointer;
+    text-align: center;
+}

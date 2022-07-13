@@ -1,4 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
+import './image-form.css';
 
 const ImageForm = () => {
     const [imageWidth, setImageWidth] = useState(256);
@@ -10,15 +11,37 @@ const ImageForm = () => {
         }
     };
 
+    const [imageHeight, setImageHeight] = useState(256);
+    const changeImageHeight = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value.trim() == '') setImageHeight(0);
+        const parsedInt = parseInt(event.target.value);
+        if (!isNaN(parsedInt)) {
+            setImageHeight(parsedInt);
+        }
+    };
+
     return (
-        <form>
+        <div className='image-form'>
             <label>Width</label>
             <input
                 data-testid='image-form-width-field'
+                className='image-form-width-field'
                 type="text"
                 value={imageWidth}
                 onChange={changeImageWidth} />
-        </form>
+
+            <label>Height</label>
+            <input
+                data-testid='image-form-height-field'
+                className='image-form-height-field'
+                type="text"
+                value={imageHeight}
+                onChange={changeImageHeight} />
+
+            <button
+                className='image-form-button'
+                type='button'>set</button>
+        </div>
     );
 }
 

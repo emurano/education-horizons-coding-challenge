@@ -1,8 +1,19 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, MouseEvent, useCallback, useEffect, useState} from 'react';
 import './image-form.css';
 
 interface ImageFormProps {
+    /**
+     * The number of pixels the width and height should produce
+     */
     numPixels: number;
+
+    /**
+     * Callback to be called when the user clicks the set button
+     *
+     * @param height The height the user entered into the form
+     * @param width The width the user entered into the form
+     */
+    onDimensionSet?: (height: number, width: number) => void;
 }
 
 /**
@@ -14,8 +25,8 @@ interface ImageFormProps {
  * @param numPixels
  */
 const useDimensions = (numPixels: number) => {
-    const [imageWidth, setImageWidth] = useState(0);
     const [imageHeight, setImageHeight] = useState(0);
+    const [imageWidth, setImageWidth] = useState(0);
 
     const changeImageWidth = (newWidth: number) => {
         if (isNaN(newWidth)) return;
@@ -50,21 +61,24 @@ const useDimensions = (numPixels: number) => {
     }, [numPixels]);
 
     return {
-        imageWidth,
         imageHeight,
+        imageWidth,
         handleWidthChange,
         handleHeightChange
     };
 };
 
-const ImageForm = ({numPixels}: ImageFormProps) => {
-
+const ImageForm = ({numPixels, onDimensionSet}: ImageFormProps) => {
     const {
-        imageWidth,
         imageHeight,
+        imageWidth,
         handleWidthChange,
         handleHeightChange
     } = useDimensions(numPixels);
+
+    const handleSetClick = () => {
+        if (onDimensionSet) onDimensionSet(imageHeight, imageWidth);
+    };
 
     return (
         <div className='image-form'>
@@ -85,8 +99,11 @@ const ImageForm = ({numPixels}: ImageFormProps) => {
                 onChange={handleHeightChange} />
 
             <button
+                data-testid='image-form-button'
                 className='image-form-button'
-                type='button'>set</button>
+                type='button'
+                onClick={handleSetClick}
+                >set</button>
         </div>
     );
 }

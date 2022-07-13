@@ -2,6 +2,8 @@ import {render, fireEvent, waitFor, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import ImageForm from "./image-form";
 
+const getWidthField = () => screen.getByTestId('image-form-width-field') as HTMLInputElement;
+const getHeightField = () => screen.getByTestId('image-form-height-field') as HTMLInputElement;
 
 describe('image form width field', () => {
     const getWidthField = () => screen.getByTestId('image-form-width-field') as HTMLInputElement;
@@ -29,7 +31,6 @@ describe('image form width field', () => {
 
 
 describe('image form height field', () => {
-    const getHeightField = () => screen.getByTestId('image-form-height-field') as HTMLInputElement;
 
     test('is rendered in th ImageForm component', () => {
         render(<ImageForm numPixels={100}/>)
@@ -53,9 +54,6 @@ describe('image form height field', () => {
 });
 
 describe('image form width and height fields initial values', () => {
-    const getWidthField = () => screen.getByTestId('image-form-width-field') as HTMLInputElement;
-    const getHeightField = () => screen.getByTestId('image-form-height-field') as HTMLInputElement;
-
     test('num pixels square root is integer, height and width are the same value', () => {
         render(<ImageForm numPixels={25600}/>);
 
@@ -73,13 +71,13 @@ describe('image form width and height fields initial values', () => {
 });
 
 describe('image form width and height fields', () => {
-    const getWidthField = () => screen.getByTestId('image-form-width-field') as HTMLInputElement;
-    const getHeightField = () => screen.getByTestId('image-form-height-field') as HTMLInputElement;
+
 
     test('height is recalculated when width is changed', () => {
         render(<ImageForm numPixels={25600}/>);
 
         fireEvent.change(getWidthField(), {target: {value: '200'}});
+
         expect(getHeightField().value).toEqual('128');
     });
 
@@ -87,6 +85,22 @@ describe('image form width and height fields', () => {
         render(<ImageForm numPixels={10000}/>);
 
         fireEvent.change(getWidthField(), {target: {value: '300'}});
+
         expect(getHeightField().value).toEqual('34');
+    });
+});
+
+describe('image form width set button', () => {
+    test('dimensions set callback is called with the height and width when button is tapped', () => {
+        const onDimensionSet = jest.fn();
+        render(<ImageForm numPixels={100000} onDimensionSet={onDimensionSet}/>);
+
+        const height = getHeightField().value;
+        const width = getWidthField().value;
+
+        fireEvent.click(screen.getByTestId('image-form-button') as HTMLButtonElement);
+
+        expect(onDimensionSet).toHaveBeenCalledTimes(1);
+        expect(onDimensionSet).toHaveBeenCalledWith(height, width);
     });
 });

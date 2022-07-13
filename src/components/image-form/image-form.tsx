@@ -15,6 +15,7 @@ interface ImageFormProps {
  */
 const useDimensions = (numPixels: number) => {
     const [imageWidth, setImageWidth] = useState(0);
+    const [imageHeight, setImageHeight] = useState(0);
 
     const changeImageWidth = (newWidth: number) => {
         if (isNaN(newWidth)) return;
@@ -33,7 +34,6 @@ const useDimensions = (numPixels: number) => {
         changeImageWidth(parseInt(event.target.value));
     };
 
-    const [imageHeight, setImageHeight] = useState(0);
     const handleHeightChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.value.trim() == '') setImageHeight(0);
         changeImageHeight(parseInt(event.target.value));

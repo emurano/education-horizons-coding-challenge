@@ -2,6 +2,8 @@
 
 This is my submission for the coding challenged offered by Event Horizons.
 
+
+
 ## Running the application
 
 I have provided two ways to run the application.
@@ -43,6 +45,44 @@ docker run -p 8080:80 ericmurano
 ```
 
 3. Access the site through http://localhost:8080
+
+## Running tests
+
+1. Ensure that you have node 18 installed
+
+```shell
+nvm use 18
+```
+
+2. Install yarn
+
+```shell
+npm install --global yarn
+```
+
+3. Run the test command
+
+```shell
+yarn test
+```
+
+You should see the interactive menu:
+
+```shell
+No tests found related to files changed since last commit.
+Press `a` to run all tests, or run Jest with `--watchAll`.
+
+Watch Usage
+ › Press a to run all tests.
+ › Press f to run only failed tests.
+ › Press q to quit watch mode.
+ › Press p to filter by a filename regex pattern.
+ › Press t to filter by a test name regex pattern.
+ › Press Enter to trigger a test run.
+
+```
+
+4. Press `a` to run the tests
 
 
 ## Notes

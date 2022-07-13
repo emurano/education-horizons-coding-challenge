@@ -9,7 +9,7 @@ const numColours = 32768;
 const defaultWidth = 256;
 const defaultHeight = calculateHeightFromWidth(defaultWidth, numColours);
 
-function AppShell() {
+const AppShell = () => {
 
     const [height, setHeight] = useState(defaultHeight);
     const [width, setWidth] = useState(defaultWidth);

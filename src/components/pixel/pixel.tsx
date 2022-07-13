@@ -4,8 +4,13 @@ import './pixel.css';
 interface PixelProps {
     colour: string;
 }
-const Pixel = ({colour}: PixelProps) => {
 
+/**
+ * A single pixel part of an image
+ *
+ * @param colour the css colour of the image
+ */
+const Pixel = ({colour}: PixelProps) => {
     const divStyle = {
         backgroundColor: colour
     };
